@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "MusicDB.h"
 #include "pch.h"
 #include <fstream>
@@ -12,10 +13,13 @@ namespace MusicBox
 {
 	int song_index = 0;
 	const int total_songs = 8;
-	a_song songs[8];
+	vector<a_song> songs;
 	void load_music()
 	{ 
-// clearing the songs
+		a_song new_song;
+
+
+//clearing the songs
 		song_index = 0;
 //Inporting songs
 		ifstream file("saved_music.txt");
@@ -29,15 +33,26 @@ namespace MusicBox
 		}
 		while(!file.eof())
 		{
-			file >> songs[spot].title;
-			file >> songs[spot].artist;
-			file >> songs[spot].album_name;
-			file >> songs[spot].track_number;
-			file >> songs[spot].year_song_released;
-			file >> songs[spot].genre;
+			for (int index = 0; index < 64; index++)
+			{
+				new_song.title[index] = '\0';
+				new_song.album_name[index] = '\0';
+				if (index < 32)
+				{
+					new_song.artist[index] = '\0';
+				}
+			}
+
+			file >> new_song.title;
+			file >> new_song.artist;
+			file >> new_song.album_name;
+			file >> new_song.track_number;
+			file >> new_song.year_song_released;
+			file >> new_song.genre;
 			spot++;
 
-// file is empty
+			songs.push_back(new_song);
+//file is empty
 			if (file.peek() == std::ifstream::traits_type::eof())
 			{
 				break;
@@ -69,10 +84,16 @@ namespace MusicBox
 	}
 	void addnew_song()
 	{
-		if (song_index == total_songs)
+		a_song new_song;
+
+		for (int index = 0; index < 64; index++)
 		{
-			cout << "Total number of songs is reached: \n";
-			return;
+			new_song.title[index] = '\0';
+			new_song.album_name[index] = '\0';
+			if (index < 32)
+			{
+				new_song.artist[index] = '\0';
+			}
 		}
 		int spot = 0;
 		char input = '\0';
@@ -88,7 +109,7 @@ namespace MusicBox
 				cout << "Clearing song information and command \n";
 				for (int index = 0; index < 64; index++)
 				{
-					songs[song_index].title[index] = '\0';
+					new_song.title[index] = '\0';
 					
 				}
 				return;
@@ -101,7 +122,7 @@ namespace MusicBox
 			{
 				continue;
 			}
-			songs[song_index].title[spot] = input;
+			new_song.title[spot] = input;
 			spot++;
 		}
 
@@ -116,7 +137,7 @@ namespace MusicBox
 				cout << "Clearing song information and command \n";
 				for (int index = 0; index < 31; index++)
 				{
-					songs[song_index].artist[index] = '\0';
+					new_song.artist[index] = '\0';
 
 				}
 				return;
@@ -128,7 +149,7 @@ namespace MusicBox
 			{
 				continue;
 			}
-			songs[song_index].artist[spot] = input;
+			new_song.artist[spot] = input;
 			spot++;
 		}
 
@@ -143,7 +164,7 @@ namespace MusicBox
 				cout << "Clearing song information and command \n";
 				for (int index = 0; index < 64; index++)
 				{
-					songs[song_index].album_name[index] = '\0';
+					new_song.album_name[index] = '\0';
 
 				}
 				return;
@@ -155,20 +176,29 @@ namespace MusicBox
 			{
 				continue;
 			}
-			songs[song_index].album_name[spot] = input;
+			new_song.album_name[spot] = input;
 			spot++;
 		}
 
 		cout << "\nPlease enter the track number: ";
-		cin >> songs[song_index].track_number;
+		cin >> new_song.track_number;
 
 		cout << "Please enter the year_song_released: ";
-		cin >> songs[song_index].year_song_released;
+		cin >> new_song.year_song_released;
 
 		cout << "Please enter the genre: ";
-		cin >> songs[song_index].genre;
+		cin >> new_song.genre;
 	
 		song_index++;
+
+		cout << new_song.title << endl;
+		cout << new_song.artist << endl;
+		cout << new_song.album_name << endl;
+		cout << new_song.genre << endl;
+		cout << new_song.track_number << endl;
+		cout << new_song.year_song_released << endl;
+
+		songs.push_back(new_song);
 
 	} 
 // end addnew_song()
